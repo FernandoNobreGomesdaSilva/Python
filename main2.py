@@ -1,5 +1,6 @@
 from ContaPoupanca import ContaPoupanca
 from ContaCorrente import ContaCorrente
+from datetime import datetime
 
 # Criando um objeto e testando
 while True:
@@ -8,10 +9,19 @@ while True:
     if resposta.isalpha() and resposta in ['S', 'N']:
         if resposta == 'S':
             print("\n🎉 Ótimo! Vamos começar o processo para abrir sua conta.")
-            conta_corrente = ContaCorrente(nome=input('Nome: '),
-                                           data_nascimento=input('Data nascimento dd/mm/aaaa: '),
-                                           email=input('E-mail: '))
+            nome = input('Nome: ')
+            dia = int(input("Informe o dia: "))
+            mes = int(input("Informe o mês: "))
+            ano = int(input("Informe o ano: "))
+            data_nascimento = datetime(ano, mes, dia)
+            email = input('E-mail: ')
+
+            conta_corrente = ContaCorrente(nome=nome,
+                                           data_nascimento=data_nascimento,
+                                           email=email)
+
             conta_poupanca = ContaPoupanca(conta_corrente.nome, conta_corrente.data_nascimento, conta_corrente.email)
+
             print("\nConta corrente criada com Sucesso! ✅")
             conta_corrente.imprimir_dados()
             print("\nFoi criada também uma conta poupança integrada à sua conta! ✅")

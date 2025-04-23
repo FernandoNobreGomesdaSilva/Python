@@ -1,6 +1,8 @@
+from datetime import datetime
+
 class Banco:
     # Constructor
-    def __init__(self, nome: str, data_nascimento: str, email: str) -> None:
+    def __init__(self, nome: str, data_nascimento: datetime, email: str) -> None:
         self._nome = nome
         self._data_nascimento = data_nascimento
         self._email = email
@@ -18,20 +20,20 @@ class Banco:
         self._nome = nome
 
     @property
-    def data_nascimento(self) -> str:
+    def data_nascimento(self) -> datetime:
         return self._data_nascimento
 
     @data_nascimento.setter
-    def data_nascimento(self, data_nascimento: str) -> None:
+    def data_nascimento(self, data_nascimento: datetime) -> None:
         self._data_nascimento = data_nascimento
 
     @property
     def email(self) -> str:
-        return self._email
+        return self.email
 
     @email.setter
     def email(self, email: str) -> None:
-        self._email = email
+        self.email = email
 
     # Métodos para operações financeiras (todos corretos)
     def deposito(self, valor: float) -> float:
@@ -66,4 +68,8 @@ class Banco:
     def imprimir_dados(self) -> None:
         print(f' 👤 Nome: {self.nome}')
         print(f' 📧 E-mail: {self.email}')
-        print(f' 📅 Data de Nascimento: {self.data_nascimento}')
+        if isinstance(self.data_nascimento, datetime):
+            data_formatada = self.data_nascimento.strftime("%d/%m/%Y")
+        else:
+            data_formatada = str(self.data_nascimento)  # fallback simples
+        print(f' 📅 Data de Nascimento: {data_formatada}')

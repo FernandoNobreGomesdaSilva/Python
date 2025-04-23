@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from Banco import Banco
 
 
@@ -8,12 +10,13 @@ class ContaCorrente(Banco):
     chequeEspecial = 2500.00
     jurosChequeEspecial = 0.015  # 1.5% ao mês
 
-    def __init__(self, nome: str, data_nascimento: str, email: str) -> None:
+    def __init__(self, nome: str, data_nascimento: datetime, email: str) -> None:
         # Incrementa o contador de contas corretamente (usando a classe)
         ContaCorrente.contador_contas += 1
         self.__numeroConta = ContaCorrente.contador_contas
         super().__init__(nome, data_nascimento, email)
         self._saldo_conta_corrente = 0  # Inicializado no Banco, mas pode ser redefinido aqui
+        self._data_nascimento.strftime(format="%d/%m/%Y")
 
     def emprestimo(self, valor: float, parcela: int) -> None:
         """Realiza um empréstimo com juros."""

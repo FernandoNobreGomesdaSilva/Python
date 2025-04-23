@@ -1,5 +1,6 @@
 from ContaPoupanca import ContaPoupanca
 from ContaCorrente import ContaCorrente
+from datetime import datetime
 
 def solicitar_confirmacao(mensagem):
     """Solicita uma resposta do tipo S ou N e valida."""
@@ -10,25 +11,44 @@ def solicitar_confirmacao(mensagem):
         else:
             print("❌ Entrada inválida. Por favor, digite apenas 'S' para sim ou 'N' para não.\n")
 
+
 def criar_contas():
     """Cria conta-corrente e conta poupança integradas."""
     print("\n🎉 Ótimo! Vamos começar o processo para abrir sua conta.")
+
+    nome = input('Nome: ')
+
+    while True:
+        data_nascimento_input = input('Data nascimento (dd/mm/aaaa): ')
+        try:
+            data_nascimento = datetime.strptime(data_nascimento_input, "%d/%m/%Y")
+            break
+        except ValueError:
+            print("Formato inválido! Use o formato dd/mm/aaaa.")
+
+    email = input('E-mail: ')
+
+    # Criando instância de ContaCorrente
     conta_corrente = ContaCorrente(
-        nome=input('Nome: '),
-        data_nascimento=input('Data nascimento dd/mm/aaaa: '),
-        email=input('E-mail: ')
+        nome=nome,
+        data_nascimento=data_nascimento,
+        email=email
     )
+
+    # Criando instância de ContaPoupanca integrada
     conta_poupanca = ContaPoupanca(
-        conta_corrente.nome,
-        conta_corrente.data_nascimento,
-        conta_corrente.email
+        nome=conta_corrente.nome,
+        data_nascimento=conta_corrente.data_nascimento,
+        email=conta_corrente.email
     )
+
     print("\nConta corrente criada com Sucesso! ✅")
     conta_corrente.imprimir_dados()
+
     print("\nFoi criada também uma conta poupança integrada à sua conta! ✅")
     conta_poupanca.imprimir_dados()
-    return conta_corrente, conta_poupanca
 
+    return conta_corrente, conta_poupanca
 def realizar_deposito(conta_corrente):
     """Pergunta e executa depósito na conta corrente."""
     resposta = solicitar_confirmacao("💬 Deseja realizar depósitos? (S - sim | N - não): ")
@@ -105,6 +125,8 @@ def calcular_rendimento_poupanca(conta_poupanca) -> None:
         print("\n👍 Sem problemas! Se mudar de ideia, estaremos aqui para ajudar.")
 
 
+from datetime import datetime
+
 def atualizar_dados(conta_corrente, conta_poupanca) -> None:
     """Pergunta e executa a atualização de dados pessoais."""
     resposta = solicitar_confirmacao('💬 Deseja atualizar os seus dados pessoais? (S - sim | N - não): ')
@@ -120,11 +142,15 @@ def atualizar_dados(conta_corrente, conta_poupanca) -> None:
             conta_poupanca.nome = novo_nome
 
         # Atualizar data de nascimento
-        print(f"📅 Data de nascimento atual: {conta_corrente.data_nascimento}")
-        nova_data = input("Digite a nova data de nascimento (ou Enter para manter a atual): ").strip()
+        print(f"📅 Data de nascimento atual: {conta_corrente.data_nascimento.strftime('%d/%m/%Y')}")
+        nova_data = input("Digite a nova data de nascimento (formato: dd/mm/aaaa ou Enter para manter a atual): ").strip()
         if nova_data:
-            conta_corrente.data_nascimento = nova_data
-            conta_poupanca.data_nascimento = nova_data
+            try:
+                nova_data_dt = datetime.strptime(nova_data, "%d/%m/%Y")
+                conta_corrente.data_nascimento = nova_data_dt
+                conta_poupanca.data_nascimento = nova_data_dt
+            except ValueError:
+                print("❌ Data inválida! Use o formato dd/mm/aaaa. Data de nascimento não foi alterada.")
 
         # Atualizar e-mail
         print(f"📧 E-mail atual: {conta_corrente.email}")
@@ -136,7 +162,6 @@ def atualizar_dados(conta_corrente, conta_poupanca) -> None:
         print("\n✅ Dados atualizados com sucesso!")
         conta_corrente.imprimir_dados()
         conta_poupanca.imprimir_dados()
-
     else:
         print("\n👍 Sem problemas! Se mudar de ideia, estaremos aqui para ajudar.")
 

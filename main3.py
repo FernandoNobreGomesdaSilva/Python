@@ -1,5 +1,7 @@
 from ContaPoupanca import ContaPoupanca
 from ContaCorrente import ContaCorrente
+from datetime import datetime
+
 
 def solicitar_confirmacao(mensagem):
     """Solicita uma resposta do tipo S ou N e valida."""
@@ -13,10 +15,16 @@ def solicitar_confirmacao(mensagem):
 def criar_contas():
     """Cria conta-corrente e conta poupança integradas."""
     print("\n🎉 Ótimo! Vamos começar o processo para abrir sua conta.")
+    nome = input('Nome: ')
+    dia = int(input("Informe o dia: "))
+    mes = int(input("Informe o mês: "))
+    ano = int(input("Informe o ano: "))
+    data_nascimento = datetime(ano, mes, dia)
+    email = input('E-mail: ')
     conta_corrente = ContaCorrente(
-        nome=input('Nome: '),
-        data_nascimento=input('Data nascimento dd/mm/aaaa: '),
-        email=input('E-mail: ')
+        nome=nome,
+        data_nascimento=data_nascimento,
+        email=email
     )
     conta_poupanca = ContaPoupanca(
         conta_corrente.nome,
@@ -119,12 +127,17 @@ def atualizar_dados(conta_corrente, conta_poupanca) -> None:
             conta_corrente.nome = novo_nome
             conta_poupanca.nome = novo_nome
 
-        # Atualizar data de nascimento
-        print(f"📅 Data de nascimento atual: {conta_corrente.data_nascimento}")
-        nova_data = input("Digite a nova data de nascimento (ou Enter para manter a atual): ").strip()
-        if nova_data:
-            conta_corrente.data_nascimento = nova_data
-            conta_poupanca.data_nascimento = nova_data
+            # Atualizar data de nascimento
+            print(f"📅 Data de nascimento atual: {conta_corrente.data_nascimento.strftime('%d/%m/%Y')}")
+            nova_data = input(
+                "Digite a nova data de nascimento (formato: dd/mm/aaaa ou Enter para manter a atual): ").strip()
+            if nova_data:
+                try:
+                    nova_data_dt = datetime.strptime(nova_data, "%d/%m/%Y")
+                    conta_corrente.data_nascimento = nova_data_dt
+                    conta_poupanca.data_nascimento = nova_data_dt
+                except ValueError:
+                    print("❌ Data inválida! Use o formato dd/mm/aaaa. Data de nascimento não foi alterada.")
 
         # Atualizar e-mail
         print(f"📧 E-mail atual: {conta_corrente.email}")

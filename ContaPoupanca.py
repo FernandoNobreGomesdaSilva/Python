@@ -1,7 +1,9 @@
+from datetime import datetime
+
 from Banco import Banco
 
 class ContaPoupanca(Banco):
-    def __init__(self, nome: str, data_nascimento: str, email: str) -> None:
+    def __init__(self, nome: str, data_nascimento: datetime, email: str) -> None:
         """
         Inicializa uma conta poupança com taxa de juros básica.
         """
